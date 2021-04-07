@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Our Web Project</title>
+<link rel="shortcut icon" type="image/x-icon" href="assets/images/sitelogo.png"/>
+<link rel="stylesheet" href="assets/css/intro.css">
+
+</head>
+<body>
+<h1 style="text-align: center; color:#fff;"><img src="assets/images/sitelogo.png" style="height:400px; width:400px;"></h1>
+
+<p class="type_text" style="text-align:center; color:#d5d4f7; font-size:18pt;"></p> 
+
+<div id="indexBtn" class="center">
+<button id="visual-btn" onclick="javascript:location.href='index.jsp';">Visit Our Site!</button>
+</div>
+<div class="video-background">
+    <div class="video-foreground">
+     <video muted autoplay loop id="back_video">
+    	<source src="assets/videos/background_video.mp4" type="video/mp4">
+    </video>
+    </div>
+  </div>
+  <div class="video-film"></div>
+
+  <script type="text/javascript" src="assets/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="assets/js/typeit.min.js"></script>
+  <script type="text/javascript">
+  // 참조 사이트 : https://typeitjs.com/
+  $(function(){
+	  var str1 = ["KH 정보교육원"," 수강생들을 위한", "WAS 교육용 사이트..."];
+	  var str2 = ["누구나 할 수 있는<br>_쉬운 웹 구현 ! !<br>_지금 바로 함께 하세요!"];
+	  var str3 = ["Hey, you!!<br>_Don't be hesitate,<br>_Right Now!!"];
+	  $('.type_text').typeIt({
+		  	strings: str1,
+		    html: true,
+		    autoStart: true,
+		    loop:true,
+		    typeSpeed: 100
+		})
+	.tiPause(1500)
+	.tiDelete(130)
+	.tiType(str2)
+	.tiPause(1700)
+	.tiDelete(130)
+	.tiType(str3)
+	.tiPause(1700)
+	.tiEmpty();
+  });
+</script>
+</body>
+</html>
