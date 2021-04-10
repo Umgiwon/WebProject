@@ -1,11 +1,17 @@
 package com.kh.jsp.board.model.dao;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
+import static com.kh.jsp.common.JDBCTemplate.close;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Properties;
 
 import com.kh.jsp.board.model.vo.Board;
-import static com.kh.jsp.common.JDBCTemplate.*;
 
 public class BoardDAO {
 
@@ -89,6 +95,77 @@ public class BoardDAO {
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
+		} finally {
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public Board selectOne(Connection con, int bno) {
+		Board b = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		String sql = prop.getProperty("selectOne");
+		
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, bno);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				b = new Board();
+				
+				b.setBno(bno);
+				b.setBtype(rs.getInt("btype"));
+				b.setBtitle(rs.getString("btitle"));
+				b.setBcontent(rs.getString("bcontent"));
+				b.setBwriter(rs.getString("username"));
+				b.setUserId(rs.getString("bwriter"));
+				b.setBcount(rs.getInt("bcount"));
+				b.setBoardfile(rs.getString("boardfile"));
+				b.setBdate(rs.getDate("bdate"));
+				
+			}
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(ps);
+		}
+		
+		return b;
+	}
+
+	public int updateReadCount(Connection con, int bno) {
+
+		int result = 0; // 결과를 담기 위한 변수 ( 'n'행이 실행 되었습니다.)
+		
+		PreparedStatement ps = null; // SQL 실행을 위한 객체
+		
+		String sql = prop.getProperty("updateReadCount");
+		
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, bno);
+			
+			// SQL 실행!
+			// .executeQuery() : SELECT
+			// .executeUpdate() : INSERT / UPDATE / DELETE
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+
 		} finally {
 			close(ps);
 		}

@@ -35,4 +35,31 @@ public class BoardService {
 		return result;
 	}
 
+	public Board selectOne(int bno) {
+		con = getConnection();
+		
+		int result = dao.updateReadCount(con, bno);
+		
+		Board b = dao.selectOne(con, bno);
+		
+		if( result > 0 ) commit(con);
+		else rollback(con);
+		
+		close(con);
+		
+		return b;
+	}
+
+	public Board updateView(int bno) {
+		// 게시글 한 개의 정보를 조회하되
+		// 조회수 증가 X 
+		con = getConnection();
+		
+		Board b = dao.selectOne(con, bno);
+		
+		close(con);
+		
+		return b;
+	}
+
 }

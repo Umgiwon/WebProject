@@ -77,10 +77,21 @@
 				작성하기
 			</button>
 		
-		
-		
-		
-		
+			<script>
+				$('#listArea td').on('mouseenter', function() {
+					$(this).parent().css({'background' : 'yellow', 
+									'cursor' : 'pointer', 
+									'color' : 'red'});
+				}).on('mouseout', function(){
+					$(this).parent().css({'background' : 'black',
+											'color' : 'white'});
+				}).on('click', function() {
+					var bno = $(this).parent().children().first()./*text();*/attr('id');
+					
+					//console.log(bno);
+					location.href = "/myWeb/selectOne.bo?bno=" + bno;  // GET 방식
+				});
+			</script>
 		
 		
 			<% } %>
