@@ -3,6 +3,14 @@
 <%@ page import= "com.kh.jsp.board.model.vo.*, java.util.*" %>
 <%
 	ArrayList<Board> list = (ArrayList<Board>)request.getAttribute("list");
+	PageInfo pi = (PageInfo)request.getAttribute("pi");
+	
+	int st = pi.getStartPage();
+	int ed = pi.getEndPage();
+	int mx = pi.getMaxPage();
+	int limit = pi.getLimit();
+	int listCount = pi.getListCount();
+	int cur = pi.getCurrentPage();
 %>
 <!DOCTYPE html>
 <html>
@@ -96,6 +104,39 @@
 		
 			<% } %>
 		</div>		
+		
+		<div class="pagingArea" align="center">
+		
+			<button onclick="location.href = '/myWeb/selectList.bo?currentPage=1'">
+				&lt;&lt;
+			</button>	
+			
+			<% if (cur <= 1) { %>
+				<button disabled> &lt; </button>
+			<% } else { %>
+				<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%=cur - 1 %>'"> &lt; </button>
+			<% } %>
+			
+			<% for(int p = st; p <= ed; p++) { %>
+			
+				<% if (p == cur ) { %>
+					<button disabled> <%= p %> </button>
+				<% } else {%>
+					<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%= p %>'"> <%= p %></button>			
+				<% } %>
+			<% } %>
+			
+			<% if (cur >= mx) { %>
+				<button disabled> &gt; </button>
+			<% } else { %>
+				<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%=cur + 1 %>'"> &gt; </button>
+			<% } %>
+			
+			<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%= mx %>'">
+				&gt;&gt;
+			</button>
+			
+		</div>
 	</section>
 	
 	<%@ include file="../common/footer.jsp" %>

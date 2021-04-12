@@ -33,16 +33,22 @@ public class BoardDAO {
 		}
 	}
 	
-	public ArrayList<Board> selectList(Connection con) {
+	public ArrayList<Board> selectList(Connection con, int currentPage) {
 		ArrayList<Board> list = new ArrayList<>();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
 		String sql = prop.getProperty("selectList");
 		
+		// 1 : 1 ~ 10, 2 : 11 ~ 20, 3 : 21 ~ 30
+		int startRow = (currentPage - 1)* 10 + 1;
+		int endRow = currentPage * 10;
+		
 		try {
 			
 			ps = con.prepareStatement(sql);
+			ps.setInt(1, endRow);
+			ps.setInt(2, startRow);
 			
 			rs = ps.executeQuery();
 			
@@ -167,6 +173,87 @@ public class BoardDAO {
 			e.printStackTrace();
 
 		} finally {
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public int updateBoard(Connection con, Board b) {
+
+		int result = 0;
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("updateBoard");
+		
+		try {
+			ps = con.prepareStatement(sql);
+			
+			ps.setString(1, b.getBtitle());
+			ps.setString(2, b.getBcontent());
+			ps.setString(3, b.getBoardfile());
+			ps.setInt(4, b.getBno());
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		} finally {
+			close(ps);
+			
+		}
+		
+		
+		return result;
+	}
+
+	public int deleteBoard(Connection con, int bno) {
+		int result = 0;
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("deleteBoard");
+		
+		try {
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, bno);
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public int getListCount(Connection con) {
+		int result = 0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql = prop.getProperty("listCount");
+		
+		try {
+			ps = con.prepareStatement(sql);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next() ) {
+				result = rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		} finally {
+			close(rs);
 			close(ps);
 		}
 		

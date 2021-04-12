@@ -13,10 +13,10 @@ public class BoardService {
 	private Connection con;
 	private BoardDAO dao = new BoardDAO();
 	
-	public ArrayList<Board> selectList() {
+	public ArrayList<Board> selectList(int currentPage) {
 		con = getConnection();
 		
-		ArrayList<Board> list = dao.selectList(con);
+		ArrayList<Board> list = dao.selectList(con, currentPage);
 		
 		close(con);
 		return list;
@@ -61,5 +61,43 @@ public class BoardService {
 		
 		return b;
 	}
+
+	public int updateBoard(Board b) {
+		con = getConnection();
+		
+		int result = dao.updateBoard(con, b);
+		
+		if ( result >0 ) commit(con);
+		else rollback(con);
+		
+		close(con);
+		
+		return result;
+	}
+
+	public int deleteBoard(int bno) {
+		con = getConnection();
+		
+		int result = dao.deleteBoard(con, bno);
+		
+		if ( result > 0 ) commit(con);
+		else rollback(con);
+		
+		close(con);
+		
+		return result;
+	}
+
+	public int getListCount() {
+		con = getConnection();
+		
+		int result = dao.getListCount(con);
+		
+		close(con);
+		
+		return result;
+	}
+
+	
 
 }

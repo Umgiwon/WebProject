@@ -90,12 +90,19 @@
 			<br />
 			<div align="center">
 				<button type="submit">작성 완료</button> &nbsp;
-				<button type="reset">작성 취소</button>
+				<button type="button" onclick="deleteBoard();">게시글 삭제</button>
 			</div>
 			
 			</form>
 		</div>
 	</section>
+	<script>
+		function deleteBoard() {
+			var bno = '<%= b.getBno()%>';
+			
+			location.href = '/myWeb/delete.bo?bno=' + bno;		
+		};
+	</script>
 	<%@ include file="../common/footer.jsp" %>
 </body>
 </html>
