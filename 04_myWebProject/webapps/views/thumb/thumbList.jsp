@@ -11,15 +11,37 @@
 <title>사진 게시판 목록</title>
 <%@ include file="../common/head-config.jsp"%>
 <style>
-section {
-	width: 1000px;
-	height: auto;
-	background: black;
-	color: white;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 50px;
-}
+	section {
+		width: 1000px;
+		height: auto;
+		background: black;
+		color: white;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 50px;
+		margin-top : 50px;
+	}
+
+	#thumbnailArea {
+		width : 760px;
+		height : auto;
+		margin-left : auto;
+		margin-right : auto;
+	}
+	
+	.thumb-list {
+		width : 220px;
+		border : 1px solid yellow;
+		display : inline-block;
+		margin : 10px;
+		aling : center;
+	}
+	
+	.thumb-list:hover {
+		opacity : 0.8;
+		cursor : pointer;
+	}
+	
 </style>
 </head>
 <body>
@@ -62,6 +84,16 @@ section {
 				<% } %>
 		</div>
 	</section>
+	
+	<script>
+	
+	$('.thumb-list').on('click', function(){
+		var bno = $(this).attr('id');
+		
+		location.href = '/myWeb/selectOne.tn?bno=' + bno;
+	});
+	
+	</script>
 
 	<%@ include file="../common/footer.jsp"%>
 </body>
