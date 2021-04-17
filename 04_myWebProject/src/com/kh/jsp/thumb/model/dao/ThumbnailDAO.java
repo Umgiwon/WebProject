@@ -171,7 +171,7 @@ public class ThumbnailDAO {
 				
 				Attachment a = new Attachment();
 				
-				a.setBno(rs.getInt("fno"));
+				a.setFno(rs.getInt("fno"));
 				a.setBno(rs.getInt("bno"));
 				a.setFilename(rs.getString("filename"));
 				a.setFlevel(rs.getInt("flevel"));
@@ -193,6 +193,164 @@ public class ThumbnailDAO {
 		}
 		
 		return map;
+	}
+
+	public int updateThumbnail(Connection con, Thumbnail t) {
+		int result = 0;
+		
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("updateThumbnail");
+		
+		try {
+			ps = con.prepareStatement(sql);
+			
+			ps.setString(1, t.getBtitle());
+			ps.setString(2, t.getBcontent());
+			ps.setInt(3, t.getBno());
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		} finally {
+			
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public int updateAttachment(Connection con, Attachment a) {
+		
+		int result = 0;
+		
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("updateAttachment");
+		
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setString(1, a.getFilename());
+			ps.setInt(2, a.getFno());
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public int deleteThumbnail(Connection con, int bno) {
+		int result = 0;
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("deleteThumbnail");
+		
+		try {
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, bno);
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		} finally {
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public int deleteAttachment(Connection con, int bno) {
+		int result = 0;
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("deleteAttachment");
+		
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, bno);
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public String selectFilename(Connection con, int fno) {
+		String result = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		String sql = prop.getProperty("selectFilename");
+		
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, fno);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getString(1);
+			}
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		} finally {
+			close(rs);
+			close(ps);
+		}
+		
+		return result;
+	}
+
+	public int deleteOne(Connection con, int fno) {
+		int result = 0;
+		PreparedStatement ps = null;
+		
+		String sql = prop.getProperty("deleteOne");
+		
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, fno);
+			
+			result = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		} finally {
+			close(ps);
+		}
+		
+		return result;
 	}
 
 }

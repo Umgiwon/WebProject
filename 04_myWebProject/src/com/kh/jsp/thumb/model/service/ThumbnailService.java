@@ -1,7 +1,11 @@
 package com.kh.jsp.thumb.model.service;
 
-import static com.kh.jsp.common.JDBCTemplate.*;
+import static com.kh.jsp.common.JDBCTemplate.close;
+import static com.kh.jsp.common.JDBCTemplate.commit;
+import static com.kh.jsp.common.JDBCTemplate.getConnection;
+import static com.kh.jsp.common.JDBCTemplate.rollback;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,11 +83,104 @@ public class ThumbnailService {
 		
 		return map;
 	}
-	
-	
-	
-	
-	
+
+	public HashMap<String, Object> getUpdateView(int bno) {
+		con = getConnection();
+		
+		HashMap<String, Object> map = dao.selectOne(con, bno);
+		
+		close(con);
+		
+		return map;
+	}
+
+	public int updateThumbnail(Thumbnail t, ArrayList<Attachment> list, ArrayList<Attachment> newList) {
+		int result = 0;
+		
+		con = getConnection();
+		
+		int result1 = dao.updateThumbnail(con, t);	// 게시글 내용 수정
+		
+		if ( result1 > 0) {
+
+			int result2 = 0;
+			
+			// 수정용 반복
+			for(Attachment a : list ) {
+				result2 = dao.updateAttachment(con, a);
+				
+				if( result2 == 0) {
+					break;
+				}
+			}
+			
+			// 새 파일 추가용 반복
+			for(Attachment a : newList) {
+				result2 = dao.insertAttachment(con, a);
+				
+				if(result2 == 0) {
+					break;
+				}
+			}
+			
+			if( result2 > 0) {
+				commit(con);
+				result = 1; // 정상처리
+			} else {
+				rollback(con);
+			}
+			
+		}
+		
+		close(con);
+		
+		return result;
+	}
+
+	public int deleteThumbnail(int bno) {
+		
+		con = getConnection();
+		
+		// 게시글 삭제 (Status 변경 'Y' --> 'N')
+		int result = dao.deleteThumbnail(con, bno);
+		
+		if(result > 0) {
+			// 첨부 파일 삭제
+			result = dao.deleteAttachment(con, bno); 
+					
+			if( result > 0) commit(con);
+			
+			else rollback(con);
+		}
+		
+		close(con);
+		
+		return result;
+	}
+
+	public int deleteOne(int fno, String savePath) {
+		con = getConnection();
+		
+		String filename = dao.selectFilename(con, fno);
+		
+		int result = dao.deleteOne(con, fno);
+		
+		if ( result > 0 ) {
+			commit(con);
+			
+			File file = new File(savePath + "/" + filename);
+			
+			file.delete();
+		} else {
+			rollback(con);
+		}
+		
+		close(con);
+		
+		return result;
+	}
 	
 	
 }
+
+

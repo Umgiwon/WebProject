@@ -2,7 +2,7 @@
     pageEncoding="UTF-8" isErrorPage="true"%>
     
 <%
-	String msg = (String)request.getAttribute("error-mag");
+	String msg = (String)request.getAttribute("error-msg");
 %>
 <!doctype html>
 <html>
