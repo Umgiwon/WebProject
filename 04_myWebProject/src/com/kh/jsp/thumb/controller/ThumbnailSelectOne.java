@@ -1,6 +1,7 @@
 package com.kh.jsp.thumb.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kh.jsp.boardComment.model.service.BoardCommentService;
+import com.kh.jsp.boardComment.model.vo.BoardComment;
 import com.kh.jsp.thumb.model.service.ThumbnailService;
 
 /**
@@ -60,12 +63,17 @@ public class ThumbnailSelectOne extends HttpServlet {
 		
 		thumb = service.selectOne(bno);
 		
+		BoardCommentService commentService = new BoardCommentService();
+		
+		ArrayList<BoardComment> clist = commentService.selectList(bno);
+		
 		String page = "";
 		
 		if(thumb != null && thumb.get("thumbnail") != null) {
 			
 			request.setAttribute("thumbnail", thumb.get("thumbnail"));
 			request.setAttribute("attList", thumb.get("list"));
+			request.setAttribute("clist", clist);
 			
 			page = "views/thumb/thumbDetail.jsp";
 		} else {

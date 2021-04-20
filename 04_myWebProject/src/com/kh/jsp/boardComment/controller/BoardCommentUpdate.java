@@ -1,7 +1,6 @@
-package com.kh.jsp.board.controller;
+package com.kh.jsp.boardComment.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,21 +9,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.jsp.board.model.service.BoardService;
-import com.kh.jsp.board.model.vo.Board;
 import com.kh.jsp.boardComment.model.service.BoardCommentService;
 import com.kh.jsp.boardComment.model.vo.BoardComment;
 
 /**
- * Servlet implementation class BoardSelectOne
+ * Servlet implementation class BoardCommentUpdate
  */
-@WebServlet("/selectOne.bo")
-public class BoardSelectOne extends HttpServlet {
+@WebServlet("/update.co")
+public class BoardCommentUpdate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BoardSelectOne() {
+    public BoardCommentUpdate() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,45 +31,44 @@ public class BoardSelectOne extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 조회를 위한 게시글 번호 추출
+
+		int cno = Integer.parseInt(request.getParameter("cno"));
 		int bno = Integer.parseInt(request.getParameter("bno"));
+		int btype = Integer.parseInt(request.getParameter("btype"));
 		
-		// 게시글 서비스 객체 생성
-		BoardService service = new BoardService();
+		String content = request.getParameter("content");
 		
-		// 댓글 조회를 위한 서비스 추가
-		BoardCommentService commentService = new BoardCommentService();
+		BoardComment bco = new BoardComment();
+		bco.setCno(cno);
+		bco.setCcontent(content);
 		
-		// 게시글 조회 서비스 시작 --> 서비스 Go!
-		Board b= service.selectOne(bno);
-		// b <-- 조회한 결과
+		BoardCommentService service = new BoardCommentService();
+		int result = service.updateComment(bco);
 		
-		ArrayList<BoardComment> clist = commentService.selectList(bno);
-		
-		
-		String page = "";
-		
-		if ( b!= null ) { // 게시글이 있었다면 . . .  
-			
-			request.setAttribute("board", b); // 'board'라는 이름으로 b 등록
-			request.setAttribute("clist", clist);
-			
-			
-			page = "views/board/boardDetail.jsp";	// 화면 경로 준비
+		if( result > 0 ) {
+			if(btype == 1) response.sendRedirect("selectOne.bo?bno="+bno);
+			else response.sendRedirect("selectOne.tn?bno="+bno);
 			
 		} else {
-			
-			request.setAttribute("error-msg", "게시글 조회 실패!");
-			
-			page = "views/common/errorPage.jsp";
-			
+			// 에러 페이지 전달
+			request.setAttribute("error-msg", "댓글 수정 실패!");
+			request.getRequestDispatcher("views/common/errorPage.jsp")
+			       .forward(request, response);
 		}
 	
-		request.getRequestDispatcher(page)
-			   .forward(request, response);			// 화면으로 출발! 
-		
-		
-		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	}
 
 	/**
