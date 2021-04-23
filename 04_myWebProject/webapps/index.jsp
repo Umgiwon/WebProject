@@ -130,6 +130,21 @@ img {
 	<br>
 	<br>
 
+	<table align="center" id="boardTop5"
+		    style="border : 3px solid black; background : white;">
+		<thead>
+			<tr>
+				<th>글번호</th>
+				<th>제목</th>
+				<th>작성자</th>
+				<th>작성일</th>
+				<th>조회수</th>
+			</tr>
+		</thead>	    
+		
+		
+    </table>
+
 	<script>
 		var slideIndex = 1;
 		showDivs(slideIndex);
@@ -152,6 +167,61 @@ img {
 			}
 			x[slideIndex - 1].style.display = "block";
 		}
+		
+		// top-N 분석
+		$(function(){	// document.ready ( 문서 로딩 완료 시 바로 실행)
+			$.ajax({
+				url : '/myWeb/top5.bo',
+				type : 'get',
+				success : function (data) {
+					console.log(data);
+					
+					var $tbody = $('<tbody>');
+					
+					for(var i in data){
+						// 내용을 모두 담을 tr 생성
+						var $tr = $('<tr>');
+						
+						// 내용을 각각 표현할 td 태그 생성
+						var $bno = $('<td>').text(data[i].bno);
+						var $title = $('<td>').text(data[i].btitle);
+						var $writer = $('<td>').text(data[i].bwriter);
+						var $bdate = $('<td>').text(data[i].bdate);
+						var $bcount = $('<td>').text(data[i].bcount);
+						
+						$tr.append($bno).append($title)
+						   .append($writer).append($bdate)
+						   .append($bcount);
+						
+						$tbody.append($tr);
+					}
+					
+					$('#boardTop5>tbody').remove();
+					
+					$('#boardTop5').append($tbody);
+					
+				}, error : function() {
+					console.log("에러 발생!");
+				}
+			});
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	</script>
 	<%@ include file="views/common/footer.jsp"%>
 </body>

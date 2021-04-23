@@ -194,6 +194,29 @@ section {
 		event.preventDefault();
 	});
 	
+	$('#idCheck').on('click', function() {
+		$.ajax({
+			url : '/myWeb/idcheck.me',
+			type : 'post',
+			data : { userId : $("#userId").val() },
+			success : function( data ) {
+				console.log(data);
+				
+				// 전달된 결과가 0이면 : 사용가능
+				// 전달된 결과가 1이면 : 사용불가능
+				
+				if( data == 0 ) {
+					alert("사용 가능한 아이디입니다.");
+				} else {
+					alert("이미 사용중인 아이디입니다.");
+				}
+			
+				
+			}, error : function() {
+				console.log("전송 실패!");
+			}
+		});
+	});
 	
 	</script>
 	<%@ include file="../common/footer.jsp"%>

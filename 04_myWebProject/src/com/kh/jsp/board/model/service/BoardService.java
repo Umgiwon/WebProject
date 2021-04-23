@@ -98,6 +98,16 @@ public class BoardService {
 		return result;
 	}
 
+	public ArrayList<Board> selectTop5() {
+		con = getConnection();
+		
+		ArrayList<Board> list = dao.selectTop5(con);
+		
+		close(con);
+		
+		return list;
+	}
+
 	
 
 }

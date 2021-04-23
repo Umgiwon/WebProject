@@ -66,6 +66,16 @@ public class MemberService {
 		
 		return result;
 	}
+
+	public int idcheck(String userId) {
+		con = getConnection();
+		
+		int result = dao.idcheck(con, userId);
+		
+		close(con);
+		
+		return result;
+	}
 	
 	
 	
