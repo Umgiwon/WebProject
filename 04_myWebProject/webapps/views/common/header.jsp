@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <%@ page import="com.kh.jsp.member.model.vo.Member" %>
 
-<%
+<%--<%
 	Member m = (Member)session.getAttribute("member");
-%>
+	%> --%>
 
 <h1 align="center">Welcome to My Web!</h1>
 
 <div class="loginArea">
-	<% if ( m == null ) { %>
+	<c:if test="${ member == null }" >
 	<form action="/myWeb/login.me" method="post" id="loginForm">
 		<table>
 			<!-- tr>td*2 -->
@@ -42,16 +43,16 @@
 			}
 		}
 	</script>
-	<% } else { %>
+	</c:if><c:if test="${ member != null }">
 	<div id="userInfo">
-		<label><%= m.getUserName() %>님의 방문을 환영합니다.</label>
+		<label>${ member.userName }님의 방문을 환영합니다.</label>
 		<div class="btns" align="right">
 			<div id="changeInfo" onclick="changeInfo()">정보수정</div>
 			<div id="logoutBtn" onclick='logout()'>로그아웃</div> 
 		</div>
 		
 	</div>
-	<% } %>
+	</c:if>
 </div>
 <br clear="both"><br>
 <div class="wrap">

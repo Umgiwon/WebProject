@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="com.kh.jsp.board.model.vo.*"%>
-<%
-	Board b = (Board)request.getAttribute("board");
- %>
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +38,7 @@
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp" %>
+	<c:import url="/views/common/header.jsp"/>
 	<section>
 		
 		<h2 align="center">게시글 수정</h2>		
@@ -47,31 +46,31 @@
 		<div class="tableArea">	
 			<form action="/myWeb/update.bo" method="post"
 					enctype="multipart/form-data">
-			<input type="hidden" name="bno" value="<%=b.getBno() %>" />
+			<input type="hidden" name="bno" value="${ board.bno }" />
 			<table>
 				<tr>
 					<td>제목</td>			
 					<td colspan="3">
-						<input type="text" name="btitle" size="40" value="<%=b.getBtitle()%>"/>
+						<input type="text" name="btitle" size="40" value="${ board.btitle }"/>
 					</td>
 				</tr>
 				<tr>
 					<td>작성자</td>
 					<td colspan="3">
-						<%= m.getUserName() %>
-						<input type="hidden" name="userId" value="<%=m.getUserId() %>"/>
+						${ member.userName }
+						<input type="hidden" name="userId" value="${ member.userId }"/>
 					</td>
 				</tr>	
-				<% if( b.getBoardfile() != null) { %>
+				<c:if test="${ empty board.boardfile }">
 				<tr>
 					<td>기존 파일</td>
 					<td colspan="3">
-						<a href="/myWeb/resources/boardUploadFiles/<%=b.getBoardfile() %>">
-							<%=b.getBoardfile() %>
+						<a href="/myWeb/resources/boardUploadFiles/${ board.boardfile }">
+							${ board.boardfile }
 						</a>
 					</td>
 				</tr>
-				<% } %>
+				</c:if>
 				<tr>
 					<td>새 첨부 파일</td>
 					<td colspan="3">
@@ -82,7 +81,7 @@
 					<td>내용</td>
 					<td colspan="3">
 						<textarea name="bcontent" cols="50" rows="15" 
-								  style="resize:none;"><%=b.getBcontent() %></textarea>
+								  style="resize:none;">${ board.bcontent }</textarea>
 					</td>
 				</tr>
 			</table>
@@ -98,12 +97,10 @@
 	</section>
 	<script>
 		function deleteBoard() {
-			var bno = '<%= b.getBno()%>';
-			
-			location.href = '/myWeb/delete.bo?bno=' + bno;		
+			location.href = '/myWeb/delete.bo?bno=${ board.bno }';		
 		};
 	</script>
-	<%@ include file="../common/footer.jsp" %>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>
 

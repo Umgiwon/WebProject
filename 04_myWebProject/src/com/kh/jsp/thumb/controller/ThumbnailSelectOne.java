@@ -63,7 +63,9 @@ public class ThumbnailSelectOne extends HttpServlet {
 		
 		thumb = service.selectOne(bno);
 		
-		BoardCommentService commentService = new BoardCommentService();
+		
+		
+		BoardCommentService commentService = new BoardCommentService(); // 댓글 관련 
 		
 		ArrayList<BoardComment> clist = commentService.selectList(bno);
 		

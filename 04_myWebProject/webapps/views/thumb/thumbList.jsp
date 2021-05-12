@@ -1,15 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.kh.jsp.thumb.model.vo.*, java.util.*"%>
-<%
-	ArrayList<Thumbnail> list = (ArrayList<Thumbnail>)request.getAttribute("list");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사진 게시판 목록</title>
-<%@ include file="../common/head-config.jsp"%>
+<c:import url="/views/common/head-config.jsp"/>
 <style>
 	section {
 		width: 1000px;
@@ -45,43 +43,42 @@
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp"%>
-
+	<c:import url="/views/common/header.jsp"/>
 	<section>
 		<h2 align="center">사진 게시판</h2>
 		<div id="thumbnailArea">
-			<% for (Thumbnail t : list ) { %>
-			<div class="thumb-list" align="center" id="<%=t.getBno() %>">
+			<c:forEach var="t" items="${ list }">
+			<div class="thumb-list" align="center" id="${ t.bno }">
 				<div>
 					<!--  게시글 대표 사진 -->
-					<% if (t.getBoardfile() != null) { %>
+					<c:if test="${ !empty t.boardfile }">
 					<%-- 게시글 대표사진이 있다면 --%>
 
-					<img src="/myWeb/resources/thumb/<%= t.getBoardfile() %>"
+					<img src="/myWeb/resources/thumb/${ t.boardfile }"
 						width="200px" height="150px" />
 
-					<% } else {%>
+					</c:if> <c:if test="${ empty t.boardfile }">
 					<%-- 게시글 대표사진이 없다면 --%>
 
 					<img src="/myWeb/assets/images/no-image.png" width="200px"
 						height="150px" />
 
-					<% } %>
+					</c:if>
 				</div>
 
 				<p>
 					<!--  게시글 제목 -->
 					No.
-					<%= t.getBno() %> <%= t.getBtitle() %>
+					${ t.bno } ${ t.btitle }
 					<br /> 
-					조회수 : <%= t.getBcount() %>
+					조회수 : ${ t.bcount }
 				</p>
 			</div>
-			<% } %>
+			</c:forEach>
 				<br /><br />
-				<% if ( m != null ) { %>
+				<c:if test="${ !empty member }">
 					<button onclick="location.href='views/thumb/thumbInsert.jsp';">작성하기</button>
-				<% } %>
+				</c:if>
 		</div>
 	</section>
 	
@@ -95,7 +92,7 @@
 	
 	</script>
 
-	<%@ include file="../common/footer.jsp"%>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>
 

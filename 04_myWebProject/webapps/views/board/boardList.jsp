@@ -1,17 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import= "com.kh.jsp.board.model.vo.*, java.util.*" %>
-<%
-	ArrayList<Board> list = (ArrayList<Board>)request.getAttribute("list");
-	PageInfo pi = (PageInfo)request.getAttribute("pi");
-	
-	int st = pi.getStartPage();
-	int ed = pi.getEndPage();
-	int mx = pi.getMaxPage();
-	int limit = pi.getLimit();
-	int listCount = pi.getListCount();
-	int cur = pi.getCurrentPage();
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,8 +35,7 @@
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp" %>
-	
+	<c:import url="/views/common/header.jsp"/>
 	<section>
 		<br />
 		<h2 align="center">게시글 목록</h2>	
@@ -61,26 +49,31 @@
 					<th width="70px;">조회수</th>
 					<th width="80px;">첨부파일</th>
 				</tr>
-				<% for(Board b : list) { %>
+			<c:forEach var="b" items="${ list }"> 
 				<tr>
-					<td id="<%= b.getBno()%>"><%=b.getBno() %></td>	
-					<td><%=b.getBtitle() %></td>	
-					<td><%=b.getBwriter() %></td>	
-					<td><%=b.getBdate() %></td>	
-					<td><%=b.getBcount() %></td>	
-					<% if (b.getBoardfile() != null) { %>
+					<td id="${ b.bno }">${ b.bno }</td>	
+					<td>${ b.btitle }</td>	
+					<td>${ b.bwriter }</td>	
+					<td>${ b.bdate }</td>	
+					<td>${ b.bcount }</td>	
+				<c:choose>
+					<c:when test="${ not empty b.boardfile  }">
 					<td> @ </td>
-					<% } else { %>
+					</c:when>
+					<c:otherwise>
 					<td> X </td>
-					<% } %>
+					</c:otherwise>
+				</c:choose>
 				</tr>
-				<% } %>
+			</c:forEach>
+				
 			</table>		
 		</div>
 		
 		<div class="btnArea" align="center">
 			<br /><br />
-			<% if( m != null ) { %>
+			
+			<c:if test="${ !empty member }">
 			<button onclick="location.href='views/board/boardInsert.jsp'">
 				작성하기
 			</button>
@@ -100,9 +93,7 @@
 					location.href = "/myWeb/selectOne.bo?bno=" + bno;  // GET 방식
 				});
 			</script>
-		
-		
-			<% } %>
+			</c:if>
 		</div>		
 		
 		<div class="pagingArea" align="center">
@@ -111,35 +102,34 @@
 				&lt;&lt;
 			</button>	
 			
-			<% if (cur <= 1) { %>
+			<c:if test="${ pi.currentPage <= 1 }">
 				<button disabled> &lt; </button>
-			<% } else { %>
-				<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%=cur - 1 %>'"> &lt; </button>
-			<% } %>
+			</c:if><c:if test="${ pi.currentPage > 1 }">
+				<button onclick="location.href='/myWeb/selectList.bo?currentPage=${ pi.currentPage - 1 }'"> &lt; </button>
+			</c:if>
 			
-			<% for(int p = st; p <= ed; p++) { %>
+			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				<c:if test="${ pi.currentPage == p }">
+					<button disabled> ${ p } </button>
+				</c:if><c:if test="${ pi.currentPage != p }">
+					<button onclick="location.href='/myWeb/selectList.bo?currentPage=${ p }'"> ${ p }</button>			
+				</c:if>
+			</c:forEach>
 			
-				<% if (p == cur ) { %>
-					<button disabled> <%= p %> </button>
-				<% } else {%>
-					<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%= p %>'"> <%= p %></button>			
-				<% } %>
-			<% } %>
-			
-			<% if (cur >= mx) { %>
+			<c:if test="${ pi.currentPage >= pi.maxPage }">
 				<button disabled> &gt; </button>
-			<% } else { %>
-				<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%=cur + 1 %>'"> &gt; </button>
-			<% } %>
+			</c:if><c:if test="${ pi.currentPage < pi.maxPage }">
+				<button onclick="location.href='/myWeb/selectList.bo?currentPage=${ pi.currentPage + 1}'"> &gt; </button>
+			</c:if>
 			
-			<button onclick="location.href='/myWeb/selectList.bo?currentPage=<%= mx %>'">
+			<button onclick="location.href='/myWeb/selectList.bo?currentPage=${ pi.maxPage }'">
 				&gt;&gt;
 			</button>
 			
 		</div>
 	</section>
 	
-	<%@ include file="../common/footer.jsp" %>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>
 

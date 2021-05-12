@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,7 +37,7 @@
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp" %>
+	<c:import url="/views/common/header.jsp"/>
 	<section>
 		
 		<h2 align="center">게시글 작성</h2>		
@@ -54,7 +55,7 @@
 				<tr>
 					<td>작성자</td>
 					<td colspan="3">
-						<%= m.getUserName() %>
+						${ member.userName }
 						<input type="hidden" name="userId" value="<%=m.getUserId() %>"/>
 					</td>
 				</tr>	
@@ -82,7 +83,7 @@
 			</form>
 		</div>
 	</section>
-	<%@ include file="../common/footer.jsp" %>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>
 

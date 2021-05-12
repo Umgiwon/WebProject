@@ -1,16 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.util.*, com.kh.jsp.thumb.model.vo.*"%>
-<%
-Thumbnail t = (Thumbnail) request.getAttribute("thumbnail");
-ArrayList<Attachment> list = (ArrayList<Attachment>) request.getAttribute("attList");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사진 게시판 수정 페이지</title>
-<%@ include file="../common/head-config.jsp"%>
+<c:import url="/views/common/head-config.jsp"/>
 <style>
 	section {
 		width : 800px;
@@ -66,62 +63,62 @@ ArrayList<Attachment> list = (ArrayList<Attachment>) request.getAttribute("attLi
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp"%>
+	<c:import url="/views/common/header.jsp"/>
 
 	<section>
 	
 		<h2 align="center">사진 게시글 수정</h2>
 		<form action="/myWeb/update.tn" method="post" enctype="multipart/form-data">
 			<div id="updateArea">	<!-- 게시글 수정 영역 -->
-				<input type="hidden" name="bno" value="<%= t.getBno() %>"/>
+				<input type="hidden" name="bno" value="${ thumbnail.bno }"/>
 				<table align="center">
 				
 					<tr>
 						<td width="100px"> 제목 </td>
 						<td colspan="3">
-							<input type="text" name="btitle" size="53" value="<%= t.getBtitle() %>"/>
+							<input type="text" name="btitle" size="53" value="${ thumbnail.btitle }"/>
 						</td>
 					</tr>
 					<tr>
 						<td> 대표 이미지</td>
 						<td colspan="3">
-							<% if(list.get(0).getFlevel() != 1 ) { %> <%-- 대표 이미지로 시작 X --%>
+							<%-- 대표 이미지로 시작 X --%>
+							<c:if test="${ attList.get(0).flevel != 1 }">
 								<div id="titleImgArea">
 									<img src="/myWeb/assets/images/no-image.png"  
 										 id="titleImg" width="400px" height="200px"/>
 								</div>
-							<% } else { %>
+							</c:if><c:if test="${ attList.get(0).flevel == 1 }">
 								<div id="titleImgArea">
-									<img src="/myWeb/resources/thumb/<%= list.get(0).getFilename() %>"
+									<img src="/myWeb/resources/thumb/${ attList.get(0).filename }"
 										 id="titleImg" width="400px" height="200px"/>
 								</div>
-							<% } %>
+							</c:if>
 						</td>
 					</tr>
 					<tr>
 						<td>내용 사진</td>		
-						<% for (int i = 1; i < 4; i++) { %>
+						<c:forEach var="i" begin="1" end="4" >
 						<td>
-							<div id="contentImgArea<%= i %>">
-							<% if ((list.size() - 1) >= i) {%>
-							
-								<img src="/myWeb/resources/thumb/<%=list.get(i).getFilename()%>"
-									 id="contentImg<%= i %>" width="120" height="100" /> 
+							<div id="contentImgArea${ i }">
+							<c:if test="${ (attList.size -1) >= i }">
+								<img src="/myWeb/resources/thumb/${ attList.get(i).filename }"
+									 id="contentImg${ i }" width="120" height="100" /> 
 								 
-							<% } else { %>
+							</c:if><c:if test="${ (attList.size -1) < i }">
 							
 								<img src="/myWeb/assets/images/no-image.png" 
-									 id="contentImg<%= i %>" width="120" height="100" />
+									 id="contentImg${ i }" width="120" height="100" />
 									 
-							<% } %>
+							</c:if>
 							</div>
 						</td>
-						<% } %>	
+						</c:forEach>
 					</tr>
 					<tr>
 						<td>사진 메모</td>
 						<td colspan="3">
-							<textarea name="bcontent" cols="55" rows="5" style="resize : none;"><%= t.getBcontent() %></textarea>
+							<textarea name="bcontent" cols="55" rows="5" style="resize : none;">${ thumbnail.bcontent }</textarea>
 						</td>
 					</tr>
 				</table>
@@ -144,7 +141,7 @@ ArrayList<Attachment> list = (ArrayList<Attachment>) request.getAttribute("attLi
 		</form>
 	<script>
 		function goDetail() {
-			location.href="/myWeb/selectOne.tn?bno=<%= t.getBno() %>";
+			location.href="/myWeb/selectOne.tn?bno=${ thumbnail.bno}";
 		}
 	
 	
@@ -198,6 +195,6 @@ ArrayList<Attachment> list = (ArrayList<Attachment>) request.getAttribute("attLi
 	</script>
 	</section>
 
-	<%@ include file="../common/footer.jsp"%>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>

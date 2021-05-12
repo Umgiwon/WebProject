@@ -1,17 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.util.*, com.kh.jsp.thumb.model.vo.*, com.kh.jsp.boardComment.model.vo.*"%>
-<%
-Thumbnail t = (Thumbnail) request.getAttribute("thumbnail");
-ArrayList<Attachment> list = (ArrayList<Attachment>) request.getAttribute("attList");
-ArrayList<BoardComment> clist = (ArrayList<BoardComment>) request.getAttribute("clist");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사진 게시판 상세보기</title>
-<%@ include file="../common/head-config.jsp"%>
+<c:import url="/views/common/head-config.jsp"/>
 <style>
 section {
 	width: 1000px;
@@ -80,33 +76,32 @@ section {
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp"%>
-	<% if( m != null) { %> <%-- 로그인이 된 상태라면  --%>
-	
+	<c:import url="/views/common/header.jsp"/>
+	<c:if test="${ !empty member }">
 	<section>
 		<table class="detail" align="center">
 			<tr>
 				<td width="50px">제목</td>
-				<td colspan="5"><%=t.getBtitle()%></td>
+				<td colspan="5">${ thumbnail.btitle }</td>
 			</tr>
 			<tr>
 				<td>작성자</td>
-				<td><%=t.getBwriter()%></td>
+				<td>${ thumbnail.bwriter }</td>
 				<td>조회수</td>
-				<td><%=t.getBcount()%></td>
+				<td>${ thumbnail.bcount }</td>
 				<td>작성일</td>
-				<td><%=t.getBdate()%></td>
+				<td>${ thumbnail.bdate }</td>
 			</tr>
 			<tr>
 				<td>대표사진</td>
 				<td colspan="4">
 					<div id="titleImgArea" align="center">
-						<img src="/myWeb/resources/thumb/<%=list.get(0).getFilename()%>"
+						<img src="/myWeb/resources/thumb/${ attList.get(0).filename }"
 							id="titleImg" />
 					</div>
 				</td>
 				<td><a
-					href="/myWeb/resources/thumb/<%=list.get(0).getFilename()%>"
+					href="/myWeb/resources/thumb/${ attList.get(0).filename }"
 					download>
 						<button>다운로드</button>
 				</a></td>
@@ -114,56 +109,56 @@ section {
 		</table>
 		<table class="detail">
 			<tr>
-				<% for (int i = 1; i < 4; i++) { %>
+				<c:forEach var="i" begin="1" end="4">
 				<td>
 					<div class="detailImgArea">
-						<% if ((list.size() - 1) >= i) { %>
-							<img src="/myWeb/resources/thumb/<%=list.get(i).getFilename()%>"
-								class="detailImg" id="detailImg<%=i%>" /> 
-								<a href="/myWeb/resources/thumb/<%=list.get(i).getFilename()%>" download>
+						<c:if test="${ (attList.size -1) >= i }"> 
+							<img src="/myWeb/resources/thumb/${ attList.get(i).filename }"
+								class="detailImg" id="detailImg${ i }" /> 
+								<a href="/myWeb/resources/thumb/${ attList.get(i).filename }" download>
 								<button>다운로드</button>
 							</a>
 							
-							<% if (t.getUserId().equals(m.getUserId())) { %>
-							<a href="/myWeb/deletoOne.tn?fno=<%=list.get(i).getFno()%>&bno=<%= t.getBno()%>">
-								<button>사진 삭제</button>
+							<c:if test="${ thumbnail.userId.equals(member.userId) }">
+							<a href="/myWeb/deletoOne.tn?fno=${ attList.get(i).fno }&bno=${ thumbnail.bno }">
+								<button>사진 삭제</button> 
 							</a>
-							<% } %>						
-						<% } else { %>
+							</c:if>					
+						</c:if><c:if test="${ (attList.size -1) < i }">
 							<img src="/myWeb/assets/images/no-image.png" class="detailImg" />
-						<% } %>
+						</c:if>
 					</div>
 				</td>
-				<% } %>
+				</c:forEach>
 			</tr>
 			<tr>
 				<td colspan="3">
 					<button onclick="location.href='/myWeb/selectList.tn'">목록으로 돌아가기</button>
-					<% if ( m.getUserId().equals(t.getUserId()) ) { %> <%-- 게시글 작성자 라면 --%>
+					<c:if test="${ member.userId.equals(thumbnail.userId) }">
 					<button onclick="updateBoard();">수정하기</button>
 					<button onclick="deleteBoard();">삭제하기</button>
 					<script>
 						function updateBoard(){
 							
-							location.href='/myWeb/updateView.tn?bno=<%= t.getBno() %>';
+							location.href='/myWeb/updateView.tn?bno=${ thumbnail.bno }';
 							
 						}
 						
 						function deleteBoard() {
 							
-							location.href='/myWeb/delete.tn?bno=<%= t.getBno() %>';
+							location.href='/myWeb/delete.tn?bno=${ thumbnail.bno}';
 							
 						}
 					</script>
-					<% } %>
+					</c:if>
 				</td>
 			</tr>
 		</table>
 		<div id="replyArea">
 			<div id="replyWriteArea">
-				<form action="<%= request.getContextPath() %>/insert.co" method="post">
-					<input type="hidden" name="writer" value="<%= m.getUserId() %>">
-					<input type="hidden" name="bno" value="<%= t.getBno() %>" />
+				<form action="myWeb/insert.co" method="post">
+					<input type="hidden" name="writer" value="${ member.userId }">
+					<input type="hidden" name="bno" value="${ thumbnail.bno }>" />
 					<input type="hidden" name="refcno" value="0" />
 					<input type="hidden" name="clevel"  value="1"/>
 					<input type="hidden" name="btype"  value="2"/>
@@ -188,22 +183,21 @@ section {
 			
 			<div class="replySelectArea">
 			<!-- 댓글 목록 구현 영역 -->
-			<% if (clist.size() == 0) { %>
+			<c:if test="${ clist.size() ==0 }">
 				<span>여러분이 새 댓글의 주인공이 되어 보세요!</span>
-			<% } else {
-				for(BoardComment bco : clist) { %>
-				
-			<table id="replySelectTable"
-		      	 style="margin-left : <%= (bco.getClevel()-1) * 15 %>px;
-		      	 		width : <%= 800 - ((bco.getClevel()-1) * 15)%>px;"
-		      	 class="replyList<%=bco.getClevel()%>">
+			</c:if><c:if test="${ clist.size() !=0 }">
+				<c:forEach var="bco" items="${ clist }">
+			<table id="replySelectTable" 
+		      	 style="margin-left : ${ (bco.clevel -1) * 15 }px;
+		      	 		width : ${ 800 - (bco.clevel -1) * 15 }px;"
+		      	 class="replyList${ bco.clevel }">
 		  		<tr>
 		  			<td rowspan="2"> </td>
-					<td><b><%= bco.getCwriter() %></b></td>
-					<td><%= bco.getCdate() %></td>
+					<td><b>${ bco.cwriter }</b></td>
+					<td>${ bco.cdate }</td>
 					<td align="center">
- 					<%if(m.getUserId().equals(bco.getUserId())) { %>
-						<input type="hidden" name="cno" value="<%=bco.getCno()%>"/>
+ 					<c:if test="${ member.userId.equals(bco.userId) }">
+						<input type="hidden" name="cno" value="${ bco.cno }"/>
 							  
 						<button type="button" class="updateBtn" 
 							onclick="updateReply(this);">수정하기</button>
@@ -214,36 +208,34 @@ section {
 							
 						<button type="button" class="deleteBtn"
 							onclick="deleteReply(this);">삭제하기</button>
-							
-					<% } else if( bco.getClevel() < 3) { %>
-						<input type="hidden" name="writer" value="<%=m.getUserId()%>"/>
-						<input type="hidden" name="refcno" value="<%= bco.getCno() %>" />
-						<input type="hidden" name="clevel" value="<%=bco.getClevel() %>" />
+					</c:if><c:if test="${ bco.clevel < 3 }">
+						<input type="hidden" name="writer" value="${ member.userId }"/>
+						<input type="hidden" name="refcno" value="${ bco.cno }" />
+						<input type="hidden" name="clevel" value="${ bco.clevel }" />
 						<button type="button" class="insertBtn" 
 							 onclick="reComment(this);">댓글 달기</button>&nbsp;&nbsp;
 							 
 						<button type="button" class="insertConfirm"
 							onclick="reConfirm(this);"
 							style="display:none;" >댓글 추가 완료</button> 
-							
-					<% } else {%>
+					
+					</c:if><c:if test="${ bco.clevel > 3 }">		
 						<span> 마지막 레벨입니다.</span>
-					<% } %>
+					</c:if>
 					</td>
 				</tr>
-				<tr class="comment replyList<%=bco.getClevel()%>">
+				<tr class="comment replyList${ bco.clevel }">
 					<td colspan="3" style="background : transparent;">
 					<textarea class="reply-content" cols="105" rows="3"
-					 readonly="readonly"><%= bco.getCcontent() %></textarea>
+					 readonly="readonly">${ bco.ccontent }</textarea>
 					</td>
 				</tr>
 			</table>
 				
-					
-			<%
-				}
-			}
-			%>
+				</c:forEach>		
+			</c:if>
+			
+			
 			</div>
 		
 		
@@ -251,8 +243,8 @@ section {
 		<script>
 
 			// 게시글 번호 가져오기
-			var bno = '<%= t.getBno() %>';
-			var btype= 2;
+			var bno = '${ thumbnail.bno }';
+			var btype= 2; 
 			
 			function reComment(obj) {
 				// 추가 완료 버튼
@@ -283,7 +275,7 @@ section {
 				              .last().find('textarea').val();
 				
 				location.href = '/myWeb/insert.co'
-						+ '?writer=<%= m.getUserId()%>'
+						+ '?writer=${ member.userId }'
 						+ '&replyContent=' + content
 						+ '&bno=' + bno
 						+ '&refcno=' + refcno
@@ -329,14 +321,16 @@ section {
 			}
 		</script>
 	</section>
-	<% } else {  // 로그인 하지 않았다면 ( 비회원 상태라면 )   
+	</c:if><c:if test="${ empty member }">  <!-- // 로그인 하지 않았다면 ( 비회원 상태라면 )   --> 
+		
+		<c:set var="error-msg" value="회원 전용 기능입니다.<br>로그인해주세요!"/>
 		
 		request.setAttribute("error-msg", "회원 전용 기능입니다. <br> 로그인 해주세요!");
 		
 		request.getRequestDispatcher("../common/errorPage.jsp").forward(request, response);
 	
-	   } %>
-	<%@ include file="../common/footer.jsp"%>
+	</c:if>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>
 

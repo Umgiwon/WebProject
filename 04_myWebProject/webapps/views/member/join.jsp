@@ -117,13 +117,14 @@ section {
 				</tr>
 				<tr>
 					<td>취미</td>
-					<td style="text-align: left;"><input type="checkbox"
-						name="hobby" value="링피트" /> 링피트 <input type="checkbox"
-						name="hobby" value="축구" />축구 <br> <input type="checkbox"
-						name="hobby" value="가창" />가창 <input type="checkbox" name="hobby"
-						value="동물의숲" />동물의숲 <br> <input type="checkbox" name="hobby"
-						value="스타크래프트" />스타크래프트 <input type="checkbox" name="hobby"
-						value="배드민턴" />배드민턴</td>
+					<td style="text-align: left;">
+						<input type="checkbox" name="hobby" value="링피트" /> 링피트 
+						<input type="checkbox" name="hobby" value="축구" />축구 <br> 
+						<input type="checkbox" name="hobby" value="가창" />가창 
+						<input type="checkbox" name="hobby"	value="동물의숲" />동물의숲 <br> 
+						<input type="checkbox" name="hobby" value="스타크래프트" />스타크래프트 
+						<input type="checkbox" name="hobby" value="배드민턴" />배드민턴
+					</td>
 					<td></td>
 				</tr>
 			</table>

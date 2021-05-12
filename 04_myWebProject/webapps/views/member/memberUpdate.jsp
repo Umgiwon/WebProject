@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>	
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +44,7 @@ section {
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp"%>
+	<c:import url="/views/common/header.jsp" />
 
 	<section>
 		<br />
@@ -54,7 +55,7 @@ section {
 			<table align="center">
 				<tr>
 					<td width="200px">* 아이디</td>
-					<td style="text-align : left; padding-left : 50px;"><%= m.getUserId() %></td>
+					<td style="text-align : left; padding-left : 50px;">${ member.userId }</td>
 					<td width="200px"></td>
 				</tr>
 				<tr>
@@ -70,7 +71,7 @@ section {
 				</tr>
 				<tr>
 					<td>* 이름</td>
-					<td style="text-align : left; padding-left : 50px;" ><%= m.getUserName() %></td>
+					<td style="text-align : left; padding-left : 50px;" >${ member.userName }</td>
 					<td></td>
 				</tr>
 				<tr>
@@ -83,7 +84,7 @@ section {
 				<tr>
 					<td>나이</td>
 					<td><input type="number" name="age" min="10" max="100"
-						value="<%= m.getAge() %>" style="width: 140px;">&nbsp;세</td>
+						value="${ member.age }" style="width: 140px;">&nbsp;세</td>
 					<td></td>
 				</tr>
 				<tr>
@@ -95,7 +96,7 @@ section {
 				</tr>
 				<tr>
 					<td>이메일</td>
-					<td><input type="email" name="email" value="<%= m.getEmail()%>"></td>
+					<td><input type="email" name="email" value="${ member.email }"></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -129,7 +130,7 @@ section {
 			<div class="btns" align="center">
 				<div id="goMain" onclick="goMain();">메인으로</div>&nbsp;
 				<div id="updateBtn" onclick="updateMember();">수정하기</div> &nbsp;
-				<div id="deleteBtn" onclick="deleteMember();">탈퇴하기</div>
+<!-- 				<div id="deleteBtn" onclick="deleteMember();">탈퇴하기</div> -->
 			</div>
 		</form>
 
@@ -187,29 +188,29 @@ section {
 	}
 	
 	function deleteMember() {
-		location.href = "/myWeb/delete.me?mid=<%= m.getUserId()%>";
+		location.href = "/myWeb/delete.me?mid=${ member.userId }";
 	}
 	
 	$('input:radio').each(function(){
-		if( $(this).val() == '<%=m.getGender()%>')
+		if( $(this).val() == '${ member.gender }')
 		  $(this).prop('checked', true);
 		else 
 		  $(this).prop('checked', false);
 	});
 	
-	var phoneArr = '<%= m.getPhone() %>'.split('-');
+	var phoneArr = '${ member.phone}'.split('-');
 
 	$('input[name*="tel"]').each(function(index){
 		$(this).val(phoneArr[index]);
 	});
 	
-	var addressArr = '<%= m.getAddress() %>'.split(', ');
+	var addressArr = '${ member.address }'.split(', ');
 	
 	$('#zipCode').val(addressArr[0]);
 	$('#address1').val(addressArr[1]);
 	$('#address2').val(addressArr[2]);
 	
-	var hobbyArr = '<%= m.getHobby() %>'.split(', ');
+	var hobbyArr = '${ member.hobby }'.split(', ');
 	// console.log(hobbyArr);
 	$('input:checkbox').each(function(){
 		if($.inArray($(this).val(),hobbyArr) > -1)
@@ -218,7 +219,7 @@ section {
 	
 	
 	</script>
-	<%@ include file="../common/footer.jsp"%>
+	<c:import url="/views/common/footer.jsp" />
 </body>
 </html>
 

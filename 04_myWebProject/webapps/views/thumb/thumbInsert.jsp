@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사진 게시글 작성</title>
-<%@ include file="../common/head-config.jsp"%>
+<c:import url="/views/common/head-config.jsp"/>
 <style>
 	section {
 		width : 800px;
@@ -61,14 +63,13 @@
 </style>
 </head>
 <body>
-	<%@ include file="../common/header.jsp"%>
-
+	<c:import url="/views/common/header.jsp"/>
 	<section>
 	
 		<h2 align="center">사진 게시글 작성</h2>
 		<form action="/myWeb/insert.tn" method="post" enctype="multipart/form-data">
 			<div id="insertArea">	<!-- 게시글 추가 영역 -->
-				<input type="hidden" name="userId" value="<%=m.getUserId() %>" />
+				<input type="hidden" name="userId" value="${ member.userId }" />
 				<table align="center">
 				
 					<tr>
@@ -182,7 +183,7 @@
 	</script>
 	</section>
 
-	<%@ include file="../common/footer.jsp"%>
+	<c:import url="/views/common/footer.jsp"/>
 </body>
 </html>
 
